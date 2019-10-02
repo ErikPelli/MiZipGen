@@ -24,25 +24,17 @@ public class GenAB{
 	// Method that calculate the keys
 	private static String calcKey(byte[] uid, byte[] xorkey, char keyType){
 		String key = "";
-		byte[] p = new byte[6];
+		int p[] = new int[6];
+		
 		if(keyType == 'A'){
-			p[0] = (byte)(uid[0] ^ xorkey[0]);
-			p[1] = (byte)(uid[1] ^ xorkey[1]);
-			p[2] = (byte)(uid[2] ^ xorkey[2]);
-			p[3] = (byte)(uid[3] ^ xorkey[3]);
-			p[4] = (byte)(uid[0] ^ xorkey[4]);
-			p[5] = (byte)(uid[1] ^ xorkey[5]);
+			System.arraycopy(new int[]{0,1,2,3,0,1}, 0, p, 0, p.length);
 		}
 		if(keyType == 'B'){
-			p[0] = (byte)(uid[2] ^ xorkey[0]);
-			p[1] = (byte)(uid[3] ^ xorkey[1]);
-			p[2] = (byte)(uid[0] ^ xorkey[2]);
-			p[3] = (byte)(uid[1] ^ xorkey[3]);
-			p[4] = (byte)(uid[2] ^ xorkey[4]);
-			p[5] = (byte)(uid[3] ^ xorkey[5]);
+			System.arraycopy(new int[]{2,3,0,1,2,3}, 0, p, 0, p.length);
 		}
+		
 		for(int i = 0; i<p.length; i++){
-			key = key.concat(String.format("%02x", p[i]));
+			key = key.concat(String.format("%02x", (byte)(uid[p[i]] ^ xorkey[i])));
 		}
 
 		return key;
