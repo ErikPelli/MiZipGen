@@ -1,10 +1,10 @@
-# MiZipKeyGen
+# mizip-tools
 Calculate A/B keys (MiZip) for a Mifare tag.
 > Based on: https://github.com/iceman1001/proxmark3/blob/master/client/scripts/calc_mizip.lua
 
 Tool written in Java, instead of Lua.
 
-To generate the keys with the test program compile to bytecode & run MizipGen.java, and insert in the input your Mifare UID.
+To generate the keys with the test program compile to bytecode & run MizipGenMultiTest.java, and insert in the input your Mifare UID.
 If you want to use the class, only public method is GenAB.gen(String uid) and it returns a two-dimensional array.
 Returned array structure (JSON):
 ```
