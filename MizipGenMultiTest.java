@@ -14,7 +14,7 @@
 
 import java.util.Scanner;
 
-public class MizipGenMultiTest{
+public class MiZipGenMultiTest{
 	public static void main(String[] args){
 		// Test GenAB class
 		// Return is a two-dimensional array (0: A keys, 1: B keys)

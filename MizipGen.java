@@ -12,11 +12,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-public class MizipGen{
+public class MiZipGen{
 	// Library that calculate keys A/B for a Mizip key
 	// Based on: https://github.com/iceman1001/proxmark3/blob/master/client/scripts/calc_mizip.lua
 	
-	// 6 byte xor, sector key A/B
+	// 6 byte xor of specific sector (key A/B): sector 0 doesn't change
 	private final static String xortable[][] = {
 			{"1", "09125a2589e5", "F12C8453D821"},
 			{"2", "AB75C937922F", "73E799FE3241"},
@@ -35,20 +35,20 @@ public class MizipGen{
 		return data;
 	}
 	
-	// Method that calculate the keys
+	// Method that calculate a key
 	private static String calcKey(byte[] uid, byte[] xorkey, char keyType){
-		String key = "";
-		int p[] = new int[6];
-		
+		int position[];
 		if(keyType == 'A'){
-			System.arraycopy(new int[]{0,1,2,3,0,1}, 0, p, 0, p.length);
-		}
-		if(keyType == 'B'){
-			System.arraycopy(new int[]{2,3,0,1,2,3}, 0, p, 0, p.length);
+			position = new int[]{0, 1, 2, 3, 0, 1};
+		}else if(keyType == 'B'){
+			position = new int[]{2, 3, 0, 1, 2, 3};
+		}else{
+			throw new IllegalArgumentException("invalid key type!"); 
 		}
 		
-		for(int i = 0; i<p.length; i++){
-			key = key.concat(String.format("%02x", (byte)(uid[p[i]] ^ xorkey[i])));
+		String key = "";
+		for(int i = 0; i<position.length; i++){
+			key = key.concat(String.format("%02x", (byte)(uid[position[i]] ^ xorkey[i])));
 		}
 
 		return key;
@@ -70,9 +70,8 @@ public class MizipGen{
 		
 		// Cycle to generate every sector key
 		for(int i = 0; i<xortable.length; i++){
-			byte[] uidbytes = hexToBytes(uid);
-			keyGenA = calcKey(uidbytes, hexToBytes(xortable[i][1]), 'A');
-			keyGenB = calcKey(uidbytes, hexToBytes(xortable[i][2]), 'B');
+			keyGenA = calcKey(hexToBytes(uid), hexToBytes(xortable[i][1]), 'A');
+			keyGenB = calcKey(hexToBytes(uid), hexToBytes(xortable[i][2]), 'B');
 			keys[0][i+1] = keyGenA;
 			keys[1][i+1] = keyGenB;
 		}
@@ -94,7 +93,7 @@ public class MizipGen{
 			}
 		}else{
 			// calculate the specific key
-			return calcKey(hexToBytes(uid), hexToBytes(xortable[sector-1][b]), type);
+			return calcKey(hexToBytes(uid), hexToBytes(xortable[sector-1][Character.toUpperCase(type) == 'A' ? 1 : 2]), type);
 		}
 	}
 }

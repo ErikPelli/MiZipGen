@@ -14,7 +14,7 @@
 
 import java.util.Scanner;
 
-public class MizipGenSingleTest{
+public class MiZipGenSingleTest{
 	public static void main(String[] args){
 		// Test MizipGen class
 		// Return a single key (specified) as String
