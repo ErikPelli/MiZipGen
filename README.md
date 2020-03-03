@@ -4,10 +4,11 @@ Calculate A/B keys (MiZip) for a Mifare tag.
 
 To generate the keys use the tester *MiZipAllTester.java* or download the .jar from [here](https://github.com/ErikPelli/MiZipGen/releases), and insert your Mifare tag UID.
 If you want to use the class as library, please consult the docs.
+
 To run the .jar executable (tested with Java 12) use:
 > java -jar MiZipGen.jar
 
-Representative scheme of multidimension array returned from genAllKeys:
+Representative scheme of multidimensional array returned from genAllKeys:
 ```
 {
     [
