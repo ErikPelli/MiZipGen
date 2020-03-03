@@ -33,6 +33,6 @@ public class MiZipGenSingleTest{
 		int sectorNumber = input.nextInt();
 		
 		// generate key
-		System.out.println("\nGenerated Key: "+MizipGen.genKey(uid, keyType, sectorNumber));
+		System.out.println("\nGenerated Key: "+MiZipGen.genKey(uid, keyType, sectorNumber));
 	}
 }

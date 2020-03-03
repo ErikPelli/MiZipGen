@@ -11,18 +11,20 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+/**
+ * Library that calculate keys A/B for a MiZip key
+ * Based on: https://github.com/iceman1001/proxmark3/blob/master/client/scripts/calc_mizip.lua
+ */
 public class MiZipGen{
-	// Library that calculate keys A/B for a Mizip key
-	// Based on: https://github.com/iceman1001/proxmark3/blob/master/client/scripts/calc_mizip.lua
-	
+
 	// 6 byte xor of specific sector (key A/B): sector 0 doesn't change
 	private final static String xortable[][] = {
+			{"0", "A0A1A2A3A4A5", "B4C132439EEF"}, // sector 0 keys are costants
 			{"1", "09125a2589e5", "F12C8453D821"},
 			{"2", "AB75C937922F", "73E799FE3241"},
 			{"3", "E27241AF2C09", "AA4D137656AE"},
 			{"4", "317AB72F4490", "B01327272DFD"}
-		};
+	};
 	
 	// Method that convert HEX String to byte array
 	private static byte[] hexToBytes(String s) {
@@ -36,64 +38,79 @@ public class MiZipGen{
 	}
 	
 	// Method that calculate a key
-	private static String calcKey(byte[] uid, byte[] xorkey, char keyType){
+	private static String calcKey(byte[] uid, byte[] xorkey, int keyType){
 		int position[];
-		if(keyType == 'A'){
+		if(keyType == 1){
 			position = new int[]{0, 1, 2, 3, 0, 1};
-		}else if(keyType == 'B'){
-			position = new int[]{2, 3, 0, 1, 2, 3};
 		}else{
-			throw new IllegalArgumentException("invalid key type!"); 
+			position = new int[]{2, 3, 0, 1, 2, 3};
 		}
 		
-		String key = "";
+		String resultKey = "";
 		for(int i = 0; i<position.length; i++){
-			key = key.concat(String.format("%02x", (byte)(uid[position[i]] ^ xorkey[i])));
+			resultKey = resultKey.concat(String.format("%02X", (byte)(uid[position[i]] ^ xorkey[i])));
 		}
 
-		return key;
+		return resultKey;
 	}
-		
+	
+	 /**
+	 * Generate all the keys from the UID
+	 * @param uid UID of Mifare Tag as String
+	 * @return multidimensional array with all keys
+	 */	
 	public static String[][] genAllKeys(String uid){
 		// Check UID length
 		if(uid.length() != 8){
-			System.out.println("UID must be 8 character length!");
-			System.exit(1);
+			throw new IllegalArgumentException("UID must be 8 character length!");
 		}
 		
-		String keyGenA, keyGenB;
-		String[][] keys = new String[2][5];
+		// result returned next
+		String[][] keys = new String[5][2];
 		
 		// Define common sector 0 keys
-		keys[0][0] = "a0a1a2a3a4a5";
-		keys[1][0] = "b4c132439eef";
+		keys[0][0] = xortable[0][1];
+		keys[0][1] = xortable[0][2];
 		
 		// Cycle to generate every sector key
-		for(int i = 0; i<xortable.length; i++){
-			keyGenA = calcKey(hexToBytes(uid), hexToBytes(xortable[i][1]), 'A');
-			keyGenB = calcKey(hexToBytes(uid), hexToBytes(xortable[i][2]), 'B');
-			keys[0][i+1] = keyGenA;
-			keys[1][i+1] = keyGenB;
+		for(int i = 1; i < keys.length; i++){
+			keys[i][0] = calcKey(hexToBytes(uid), hexToBytes(xortable[i][1]), 1);
+			keys[i][1] = calcKey(hexToBytes(uid), hexToBytes(xortable[i][2]), 2);
 		}
-		
+		 
 		return keys;
 	}
 	
-	public static String genKey(String uid, char type, int sector){
-		// define xortable xor position
-		int b;
-		if(Character.toUpperCase(type)=='A'){b = 1;}else{b = 2;};
+	/**
+	 * Generate a specified Mifare key
+	 * @param uid UID of Mifare Tag as String
+	 * @param type type of the sector key ('A' or 'B')
+	 * @param sector sector of the result key
+	 * @return result key as String
+	 */
+	public static String genKey(String uid, int type, int sector){	
+		// even the type 
+		type = Character.toUpperCase(type);
 		
-		// common keys for sector 0
+		// Check UID length
+		if(uid.length() != 8){
+			throw new IllegalArgumentException("UID must be 8 character length!");
+		}
+		
+		// check the sector type
+		if(!(type == 'A' || type == 'B')){
+			throw new IllegalArgumentException("Invalid key type!");
+		}
+		
+		// assign to A index 1 and to B index 2 (xortable)
+		type = (type == 'A') ? 1 : 2;
+		
+		// use common keys if it's sector 0
 		if(sector == 0){
-			if(Character.toUpperCase(type)=='A'){
-				return "a0a1a2a3a4a5";
-			}else{
-				return "b4c132439eef";
-			}
+			return xortable[sector][type];
 		}else{
 			// calculate the specific key
-			return calcKey(hexToBytes(uid), hexToBytes(xortable[sector-1][Character.toUpperCase(type) == 'A' ? 1 : 2]), type);
+			return calcKey(hexToBytes(uid), hexToBytes(xortable[sector][type]), type);
 		}
 	}
 }

@@ -1,0 +1,1 @@
+memberSearchIndex = [{"p":"<Unnamed>","c":"MiZipGen","l":"genAllKeys(String)","url":"genAllKeys(java.lang.String)"},{"p":"<Unnamed>","c":"MiZipGen","l":"genKey(String, int, int)","url":"genKey(java.lang.String,int,int)"},{"p":"<Unnamed>","c":"MiZipGen","l":"MiZipGen()","url":"%3Cinit%3E()"}]

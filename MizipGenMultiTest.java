@@ -24,23 +24,18 @@ public class MiZipGenMultiTest{
 		System.out.print("Insert your Mifare tag UID: ");
 		Scanner input = new Scanner(System.in);
 		String uid = input.nextLine();
-		char keyType;
 		
 		// Generate keys with the class
-		String[][] keys = MizipGen.genAllKeys(uid);
+		String[][] keys = MiZipGen.genAllKeys(uid);
 		
-		// Print results with a for cycle
+		// Print results
 		System.out.println("\n--- MiZip generated keys ---");
-		System.out.println("UID: "+uid+"\n");
+		System.out.println("UID: " + uid + "\n");
 		
-		for(int a=0; a<keys.length; a++){
-			for(int b=0; b<keys[a].length; b++){
-				if(a==0){
-					keyType='A';
-				}else{
-					keyType='B';
-				}
-				System.out.println("Sector "+b+" Key "+keyType+": "+keys[a][b]);
+		for(int sector = 0; sector < keys.length; sector++){
+			for(int key = 0; key < keys[sector].length; key++){
+				char keyType = (key == 0) ? 'A' : 'B';
+				System.out.println("Sector: " + sector + "| Key " + keyType + ": "+keys[sector][key]);
 			}
 		}
 	}
