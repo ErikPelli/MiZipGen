@@ -14,28 +14,43 @@
 
 import java.util.Scanner;
 
-public class MiZipGenMultiTest{
+/**
+ * Tester for the MiZipGen class
+ * Prints all keys from an UID
+ */
+public class MiZipAllTester{
+	private static String[][] keys;
+	
+	private static String[][] getKeys(String uid){
+		try {
+			// Generate keys with the class
+			return MiZipGen.genAllKeys(uid);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+		
+	}
+	
 	public static void main(String[] args){
-		// Test GenAB class
-		// Return is a two-dimensional array (0: A keys, 1: B keys)
-		// example: keys[0][2] is the key A for sector 2
 		
 		System.out.println("MIZIP KEYS GENERATOR\n");
 		System.out.print("Insert your Mifare tag UID: ");
 		Scanner input = new Scanner(System.in);
 		String uid = input.nextLine();
 		
-		// Generate keys with the class
-		String[][] keys = MiZipGen.genAllKeys(uid);
+		keys = getKeys(uid);
 		
-		// Print results
-		System.out.println("\n--- MiZip generated keys ---");
-		System.out.println("UID: " + uid + "\n");
-		
-		for(int sector = 0; sector < keys.length; sector++){
-			for(int key = 0; key < keys[sector].length; key++){
-				char keyType = (key == 0) ? 'A' : 'B';
-				System.out.println("Sector: " + sector + "| Key " + keyType + ": "+keys[sector][key]);
+		if(keys != null){
+			// Print results
+			System.out.println("\n--- MiZip generated keys ---");
+			System.out.println("UID: " + uid + "\n");
+			
+			for(int sector = 0; sector < keys.length; sector++){
+				for(int key = 0; key < keys[sector].length; key++){
+					char keyType = (key == 0) ? 'A' : 'B';
+					System.out.println("Sector: " + sector + " | Key " + keyType + ": "+ keys[sector][key]);
+				}
 			}
 		}
 	}

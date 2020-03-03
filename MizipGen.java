@@ -11,13 +11,14 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 /**
  * Library that calculate keys A/B for a MiZip key
  * Based on: https://github.com/iceman1001/proxmark3/blob/master/client/scripts/calc_mizip.lua
  */
 public class MiZipGen{
 
-	// 6 byte xor of specific sector (key A/B): sector 0 doesn't change
+	// 6 byte xor of specific sector (key A/B)
 	private final static String xortable[][] = {
 			{"0", "A0A1A2A3A4A5", "B4C132439EEF"}, // sector 0 keys are costants
 			{"1", "09125a2589e5", "F12C8453D821"},
@@ -26,7 +27,7 @@ public class MiZipGen{
 			{"4", "317AB72F4490", "B01327272DFD"}
 	};
 	
-	// Method that convert HEX String to byte array
+	// Method that converts HEX String to byte array
 	private static byte[] hexToBytes(String s) {
 		int len = s.length();
 		byte[] data = new byte[len / 2];
@@ -37,7 +38,7 @@ public class MiZipGen{
 		return data;
 	}
 	
-	// Method that calculate a key
+	// Method that calculates a key
 	private static String calcKey(byte[] uid, byte[] xorkey, int keyType){
 		int position[];
 		if(keyType == 1){
@@ -55,14 +56,14 @@ public class MiZipGen{
 	}
 	
 	 /**
-	 * Generate all the keys from the UID
+	 * Generates all the keys from the UID
 	 * @param uid UID of Mifare Tag as String
 	 * @return multidimensional array with all keys
 	 */	
 	public static String[][] genAllKeys(String uid){
 		// Check UID length
 		if(uid.length() != 8){
-			throw new IllegalArgumentException("UID must be 8 character length!");
+			throw new IllegalArgumentException("UID must be 8 characters long!");
 		}
 		
 		// result returned next
@@ -82,7 +83,7 @@ public class MiZipGen{
 	}
 	
 	/**
-	 * Generate a specified Mifare key
+	 * It generates a specified key
 	 * @param uid UID of Mifare Tag as String
 	 * @param type type of the sector key ('A' or 'B')
 	 * @param sector sector of the result key
@@ -94,7 +95,7 @@ public class MiZipGen{
 		
 		// Check UID length
 		if(uid.length() != 8){
-			throw new IllegalArgumentException("UID must be 8 character length!");
+			throw new IllegalArgumentException("UID must be 8 characters long!");
 		}
 		
 		// check the sector type

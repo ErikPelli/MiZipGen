@@ -14,10 +14,12 @@
 
 import java.util.Scanner;
 
-public class MiZipGenSingleTest{
+/**
+ * Tester for the MiZipGen class
+ * Prints a generated key
+ */
+public class MiZipSingleTester{
 	public static void main(String[] args){
-		// Test MizipGen class
-		// Return a single key (specified) as String
 		
 		Scanner input = new Scanner(System.in);
 		
@@ -27,12 +29,16 @@ public class MiZipGenSingleTest{
 		String uid = input.nextLine();
 		
 		System.out.print("Insert your sector type (A or B): ");
-		char keyType = input.next().charAt(0);
+		char keyType = input.nextLine().charAt(0);
 		
 		System.out.print("Insert your sector number (0 to 4): ");
 		int sectorNumber = input.nextInt();
 		
-		// generate key
-		System.out.println("\nGenerated Key: "+MiZipGen.genKey(uid, keyType, sectorNumber));
+		try {
+			// print generated key
+			System.out.println("\nGenerated Key: " + MiZipGen.genKey(uid, keyType, sectorNumber));
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 }
