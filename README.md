@@ -12,7 +12,7 @@ To create your .jar executable and use it type:
 
 Representative scheme of multidimensional array returned from genAllKeys:
 ```
-{
+[
     [
       "Key A sector 0",
       "Key B sector 0",
@@ -33,5 +33,5 @@ Representative scheme of multidimensional array returned from genAllKeys:
       "Key A sector 4",
       "Key B sector 4",
     ]
-}
+]
 ```
