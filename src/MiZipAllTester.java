@@ -14,18 +14,23 @@
  */
 
 import java.util.Scanner;
+import it.ErikPelli.mizipgen.MiZipGen;
 
 /**
  * Tester for the MiZipGen class
  * Prints all keys from an UID
  */
-public class MiZipAllTester{
+public class MiZipAllTester {
+	
 	private static String[][] keys;
 	
 	private static String[][] getKeys(String uid){
 		try {
-			// Generate keys with the class
-			return MiZipGen.genAllKeys(uid);
+			// MiZipGen object
+			MiZipGen generator = new MiZipGen(uid);
+			
+			// Generate keys
+			return generator.genAllKeys();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return null;

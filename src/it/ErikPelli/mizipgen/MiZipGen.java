@@ -13,11 +13,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+package it.ErikPelli.mizipgen;
+
 /**
  * Library that calculate keys A/B for a MiZip key
  * Based on: https://github.com/iceman1001/proxmark3/blob/master/client/scripts/calc_mizip.lua
  */
-public class MiZipGen{
+public class MiZipGen {
 	private byte[] uid;
 	
 	
@@ -53,8 +55,8 @@ public class MiZipGen{
 		}
 		
 		String resultKey = "";
-		for(int i = 0; i<position.length; i++){
-			resultKey = resultKey.concat(String.format("%02X", (byte)(uid[position[i]] ^ xorkey[i])));
+		for(int i = 0; i < position.length; i++){
+			resultKey += String.format("%02X", (byte)(uid[position[i]] ^ xorkey[i]));
 		}
 
 		return resultKey;
@@ -65,7 +67,7 @@ public class MiZipGen{
 	 * Constructor of the class
 	 * @param uid UID of Mifare Tag as String
 	 */	
-	public MiZipGen(String uid) {
+	public MiZipGen (String uid) {
 		// Check UID length
 		if(uid.length() != 8){
 			throw new IllegalArgumentException("UID must be 8 characters long!");
@@ -75,7 +77,7 @@ public class MiZipGen{
 	}
 	
 	/**
-	 * Generates all the keys from the UID
+	 * genAllKeys generates all the keys from the UID
 	 * @return multidimensional array with all keys
 	 */	
 	public String[][] genAllKeys(){
@@ -96,8 +98,7 @@ public class MiZipGen{
 	}
 	
 	/**
-	 * It generates a specified key
-	 * @param uid UID of Mifare Tag as String
+	 * genKey generates a specified key
 	 * @param type type of the sector key ('A' or 'B')
 	 * @param sector sector of the result key
 	 * @return result key as String

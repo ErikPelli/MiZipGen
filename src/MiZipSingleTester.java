@@ -14,6 +14,7 @@
  */
 
 import java.util.Scanner;
+import it.ErikPelli.mizipgen.MiZipGen;
 
 /**
  * Tester for the MiZipGen class
@@ -27,7 +28,7 @@ public class MiZipSingleTester{
 		// get input parameters
 		System.out.println("MIZIP SINGLE KEY GENERATOR\n");
 		System.out.print("Insert your Mifare tag UID: ");
-		String uid = input.nextLine();
+		MiZipGen generator = new MiZipGen(input.nextLine());
 		
 		System.out.print("Insert your sector type (A or B): ");
 		char keyType = input.nextLine().charAt(0);
@@ -37,7 +38,7 @@ public class MiZipSingleTester{
 		
 		try {
 			// print generated key
-			System.out.println("\nGenerated Key: " + MiZipGen.genKey(uid, keyType, sectorNumber));
+			System.out.println("\nGenerated Key: " + generator.genKey(keyType, sectorNumber));
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
