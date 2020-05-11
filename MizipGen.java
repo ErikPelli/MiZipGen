@@ -1,16 +1,17 @@
-/*	This program is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-
-	You should have received a copy of the GNU General Public License
-	along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+/*	
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
  * Library that calculate keys A/B for a MiZip key
@@ -20,7 +21,7 @@ public class MiZipGen{
 
 	// 6 byte xor of specific sector (key A/B)
 	private final static String xortable[][] = {
-			{"0", "A0A1A2A3A4A5", "B4C132439EEF"}, // sector 0 keys are costants
+			{"0", "A0A1A2A3A4A5", "B4C132439EEF"}, // sector 0 keys are constants
 			{"1", "09125a2589e5", "F12C8453D821"},
 			{"2", "AB75C937922F", "73E799FE3241"},
 			{"3", "E27241AF2C09", "AA4D137656AE"},
