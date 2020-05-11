@@ -18,14 +18,18 @@
  * Based on: https://github.com/iceman1001/proxmark3/blob/master/client/scripts/calc_mizip.lua
  */
 public class MiZipGen{
+	private byte[] uid;
+	
+	
+	// Constants and static methods
 
 	// 6 byte xor of specific sector (key A/B)
-	private final static String xortable[][] = {
-			{"0", "A0A1A2A3A4A5", "B4C132439EEF"}, // sector 0 keys are constants
-			{"1", "09125a2589e5", "F12C8453D821"},
-			{"2", "AB75C937922F", "73E799FE3241"},
-			{"3", "E27241AF2C09", "AA4D137656AE"},
-			{"4", "317AB72F4490", "B01327272DFD"}
+	private static final String xortable[][] = {
+			{"A0A1A2A3A4A5", "B4C132439EEF"}, // sector 0 keys are constants
+			{"09125a2589e5", "F12C8453D821"}, // sector 1
+			{"AB75C937922F", "73E799FE3241"}, // sector 2
+			{"E27241AF2C09", "AA4D137656AE"}, // sector 3
+			{"317AB72F4490", "B01327272DFD"}  // sector 4
 	};
 	
 	// Method that converts HEX String to byte array
@@ -40,9 +44,9 @@ public class MiZipGen{
 	}
 	
 	// Method that calculates a key
-	private static String calcKey(byte[] uid, byte[] xorkey, int keyType){
+	private String calcKey(byte[] xorkey, int keyType){
 		int position[];
-		if(keyType == 1){
+		if(keyType == 0){
 			position = new int[]{0, 1, 2, 3, 0, 1};
 		}else{
 			position = new int[]{2, 3, 0, 1, 2, 3};
@@ -56,28 +60,36 @@ public class MiZipGen{
 		return resultKey;
 	}
 	
-	 /**
-	 * Generates all the keys from the UID
+	
+	/**
+	 * Constructor of the class
 	 * @param uid UID of Mifare Tag as String
-	 * @return multidimensional array with all keys
 	 */	
-	public static String[][] genAllKeys(String uid){
+	public MiZipGen(String uid) {
 		// Check UID length
 		if(uid.length() != 8){
 			throw new IllegalArgumentException("UID must be 8 characters long!");
+		} else {
+			this.uid = hexToBytes(uid);
 		}
-		
-		// result returned next
+	}
+	
+	/**
+	 * Generates all the keys from the UID
+	 * @return multidimensional array with all keys
+	 */	
+	public String[][] genAllKeys(){
+		// Array to save generated keys
 		String[][] keys = new String[5][2];
 		
 		// Define common sector 0 keys
-		keys[0][0] = xortable[0][1];
-		keys[0][1] = xortable[0][2];
+		keys[0][0] = xortable[0][0];
+		keys[0][1] = xortable[0][1];
 		
-		// Cycle to generate every sector key
+		// for cycle to generate every sector key
 		for(int i = 1; i < keys.length; i++){
-			keys[i][0] = calcKey(hexToBytes(uid), hexToBytes(xortable[i][1]), 1);
-			keys[i][1] = calcKey(hexToBytes(uid), hexToBytes(xortable[i][2]), 2);
+			keys[i][0] = calcKey(hexToBytes(xortable[i][0]), 0);
+			keys[i][1] = calcKey(hexToBytes(xortable[i][1]), 1);
 		}
 		 
 		return keys;
@@ -90,14 +102,9 @@ public class MiZipGen{
 	 * @param sector sector of the result key
 	 * @return result key as String
 	 */
-	public static String genKey(String uid, int type, int sector){	
-		// even the type 
+	public String genKey(int type, int sector){	
+		// It is valid even if char is lower case
 		type = Character.toUpperCase(type);
-		
-		// Check UID length
-		if(uid.length() != 8){
-			throw new IllegalArgumentException("UID must be 8 characters long!");
-		}
 		
 		// check the sector type
 		if(!(type == 'A' || type == 'B')){
@@ -105,14 +112,14 @@ public class MiZipGen{
 		}
 		
 		// assign to A index 1 and to B index 2 (xortable)
-		type = (type == 'A') ? 1 : 2;
+		type = (type == 'A') ? 0 : 1;
 		
 		// use common keys if it's sector 0
 		if(sector == 0){
 			return xortable[sector][type];
 		}else{
 			// calculate the specific key
-			return calcKey(hexToBytes(uid), hexToBytes(xortable[sector][type]), type);
+			return calcKey(hexToBytes(xortable[sector][type]), type);
 		}
 	}
 }
